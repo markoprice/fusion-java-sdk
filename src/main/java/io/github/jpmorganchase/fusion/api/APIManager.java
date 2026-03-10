@@ -4,10 +4,11 @@ import io.github.jpmorganchase.fusion.api.exception.APICallException;
 import io.github.jpmorganchase.fusion.api.operations.APIDownloadOperations;
 import io.github.jpmorganchase.fusion.api.operations.APIUploadOperations;
 import io.github.jpmorganchase.fusion.http.HttpResponse;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public interface APIManager extends APIDownloadOperations, APIUploadOperations {
@@ -63,7 +64,7 @@ public interface APIManager extends APIDownloadOperations, APIUploadOperations {
 
     static String encodeUrl(String rawUrl) {
         try {
-            URL url = new URL(rawUrl);
+            URL url = URI.create(rawUrl).toURL();
 
             String protocol = url.getProtocol();
             String host = url.getHost();
@@ -83,7 +84,8 @@ public interface APIManager extends APIDownloadOperations, APIUploadOperations {
                     // Leave the path unencoded
                     encodedSegment = segment;
                 } else {
-                    encodedSegment = URLEncoder.encode(segment, "UTF-8").replace("+", "%20");
+                    encodedSegment =
+                            URLEncoder.encode(segment, StandardCharsets.UTF_8).replace("+", "%20");
 
                     // If the segment contains '.' not used as a special path
                     if (segment.contains(".")) {
@@ -110,7 +112,7 @@ public interface APIManager extends APIDownloadOperations, APIUploadOperations {
             }
 
             return finalUrl.toString();
-        } catch (MalformedURLException | UnsupportedEncodingException e) {
+        } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
     }
