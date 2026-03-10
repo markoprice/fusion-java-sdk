@@ -280,7 +280,7 @@ public class FusionAPIUploadOperations implements APIUploadOperations {
         DigestDescriptor digestOfPart = digestProducer.execute(
                 new ByteArrayInputStream(ByteBuffer.wrap(part, 0, read).array()));
 
-        Map<String, String> requestHeaders = ur.getHeaders();
+        Map<String, String> requestHeaders = new HashMap<>(ur.getHeaders());
         setSecurityHeaders(ur, requestHeaders);
         requestHeaders.put("accept", "*/*");
         requestHeaders.put("Content-Type", "application/octet-stream");
