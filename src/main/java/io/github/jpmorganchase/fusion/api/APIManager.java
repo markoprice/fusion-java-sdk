@@ -112,7 +112,7 @@ public interface APIManager extends APIDownloadOperations, APIUploadOperations {
             }
 
             return finalUrl.toString();
-        } catch (MalformedURLException e) {
+        } catch (MalformedURLException | IllegalArgumentException e) {
             throw new RuntimeException(e);
         }
     }
